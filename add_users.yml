@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Add users to password file
+    htpasswd:
+      path: /tmp/passwdfile
+      name: "{{ item }}"
+      password: 'openshift4'
+    loop:
+      - john
+      - paul
+      - ringo
+      - george
+      - pete

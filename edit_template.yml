@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Add network policy allow-same-namespace to project template
+    blockinfile:
+      path: /tmp/template.yaml
+      block: |
+        - apiVersion: networking.k8s.io/v1
+          kind: NetworkPolicy
+          metadata:
+            name: allow-same-namespace
+          spec:
+            podSelector:
+            ingress:
+            - from:
+              - podSelector: {}
+        - apiVersion: networking.k8s.io/v1
+          kind: NetworkPolicy
+          metadata:
+            name: allow-from-openshift-ingress
+          spec:
+            ingress:
+            - from:
+              - namespaceSelector:
+                  matchLabels:
+                    network.openshift.io/policy-group: ingress
+            podSelector: {}
+            policyTypes:
+            - Ingress
+      insertbefore: "parameters:" 
+
+
