@@ -3,7 +3,7 @@
   tasks:
   - name: Add users to password file
     htpasswd:
-      path: /tmp/passwdfile
+      path: files/passwdfile
       name: "{{ item }}"
       password: 'openshift4'
     loop:
@@ -12,3 +12,27 @@
       - ringo
       - george
       - pete
+
+  - name: Create the htpasswd Secret YAML
+    template:
+      src: files/htpasswd-secret.yaml.j2
+      dest: files/htpasswd-secret.yaml
+    vars:
+      htpasswd_var: "{{ lookup('file', 'files/passwdfile') }}"
+      htpasswd_encoded: "{{ htpasswd_var | b64encode }}"
+
+  - name: Create the htpasswd Secret
+    k8s:
+      state: present
+      src: files/htpasswd-secret.yaml
+
+  - name: Create the htpasswd CR
+    k8s:
+      state: present
+      src: files/htpasswd-cr.yaml
+
+  - name: Make user john cluster-admin
+    k8s:
+      state: present
+      src: files/cluster-admin-rolebinding.yaml
+
