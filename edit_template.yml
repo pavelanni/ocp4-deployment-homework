@@ -1,32 +1,50 @@
 ---
 - hosts: localhost
   tasks:
-  - name: Add network policy allow-same-namespace to project template
+  - name: Get the original template
+    command: oc adm create-bootstrap-project-template -o yaml
+    register: r_template
+
+  - name: Copy to file
+    copy: 
+      content: "{{ r_template.stdout }}" 
+      dest: files/template.yaml
+
+  - name: Add namespace to the YAML
+    lineinfile:
+      path: files/template.yaml
+      insertafter: "^  name: .*"
+      line: "  namespace: openshift-config"
+
+  - name: Add network policies to project template
     blockinfile:
-      path: /tmp/template.yaml
-      block: |
-        - apiVersion: networking.k8s.io/v1
-          kind: NetworkPolicy
-          metadata:
-            name: allow-same-namespace
-          spec:
-            podSelector:
-            ingress:
-            - from:
-              - podSelector: {}
-        - apiVersion: networking.k8s.io/v1
-          kind: NetworkPolicy
-          metadata:
-            name: allow-from-openshift-ingress
-          spec:
-            ingress:
-            - from:
-              - namespaceSelector:
-                  matchLabels:
-                    network.openshift.io/policy-group: ingress
-            podSelector: {}
-            policyTypes:
-            - Ingress
+      path: files/template.yaml
+      marker: "# {mark} NETPOL"
+      block: "{{ netpol_var }}"
       insertbefore: "parameters:" 
+    vars:
+      netpol_var: "{{ lookup('file', 'files/netpol.yaml') }}"
 
+  - name: Add limit ranges to project template
+    blockinfile:
+      path: files/template.yaml
+      marker: "# {mark} LIMITRANGE"
+      block: "{{ limitrange_var }}"
+      insertbefore: "parameters:" 
+    vars:
+      limitrange_var: "{{ lookup('file', 'files/limitranges.yaml') }}"
 
+  - name: Add resource quotas to project template
+    blockinfile:
+      path: files/template.yaml
+      marker: "# {mark} RESOURCEQUOTA"
+      block: "{{ resourcequotas_var }}"
+      insertbefore: "parameters:" 
+    vars:
+      resourcequotas_var: "{{ lookup('file', 'files/resourcequotas.yaml') }}"
+
+  - name: Create project request template
+    command: oc apply -f files/template.yaml -n openshift-config
+
+  - name: Create project request template
+    command: oc patch project.config.openshift.io/cluster --type merge -p '{"spec":{"projectRequestTemplate":{"name":"project-request"}}}'
