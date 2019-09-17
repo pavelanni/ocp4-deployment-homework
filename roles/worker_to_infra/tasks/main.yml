@@ -1,0 +1,28 @@
+---
+- name: Copy the machineset to file
+  copy: 
+    content: "{{ machineset | to_nice_json }}"
+    dest: files/machineset_worker.json
+
+- name: Add infra role
+  lineinfile:
+    path: files/machineset_worker.json
+    insertafter: '^                "metadata": {'
+    line: '                    "labels": { "node-role.kubernetes.io/infra": "" },'
+
+- name: Change name to infra
+  lineinfile:
+    path: files/machineset_worker.json
+    backrefs: yes
+    regexp: '^(        "name": "cluster-)(.*)-worker-(.*",)$'
+    line: '\1\2-infra-\3'
+
+- name: Delete resourceVersion
+  lineinfile:
+    path: files/machineset_worker.json
+    regexp: '^        "resourceVersion"'
+    state: absent
+
+- name: Create the machineset
+  k8s:
+    src: files/machineset_worker.json

@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Get the worker machinesets
+    k8s_facts:
+      api_version: machine.openshift.io/v1beta1
+      kind: MachineSet
+      namespace: openshift-machine-api 
+    register: r_workers
+  
+  - name: Create infra machinesets
+    include_role: 
+      name: worker_to_infra
+    vars:
+      machineset: "{{ item }}"
+    loop:
+      - "{{ r_workers.resources[0] }}"
+      - "{{ r_workers.resources[1] }}"

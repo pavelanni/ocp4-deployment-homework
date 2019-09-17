@@ -10,11 +10,11 @@
       content: "{{ r_template.stdout }}" 
       dest: files/template.yaml
 
-  - name: Add namespace to the YAML
-    lineinfile:
-      path: files/template.yaml
-      insertafter: "^  name: .*"
-      line: "  namespace: openshift-config"
+#  - name: Add namespace to the YAML
+#    lineinfile:
+#      path: files/template.yaml
+#      insertafter: "^  name: .*"
+#      line: "  namespace: openshift-config"
 
   - name: Add network policies to project template
     blockinfile:
