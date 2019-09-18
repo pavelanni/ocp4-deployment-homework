@@ -1,0 +1,6 @@
+---
+- import_playbook: add_users.yml
+- import_playbook: edit_template.yml
+- import_playbook: infra_nodes.yml
+- import_playbook: infra_workloads.yml
+- import_playbook: cluster_logging.yml

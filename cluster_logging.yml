@@ -1,0 +1,62 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Create a namespace for Elasticserach Operator
+    k8s:
+      state: present
+      src: files/eo-namespace.yaml
+
+  - name: Create a namespace for Cluster Logging Operator
+    k8s:
+      state: present
+      src: files/clo-namespace.yaml
+
+  - name: Create an Operator Group object
+    k8s:
+      state: present
+      src: files/eo-og.yaml
+
+  - name: Create a CatalogSourceConfig object for Elasticsearch operator
+    k8s:
+      state: present
+      src: files/eo-csc.yaml
+
+  - name: Run the oc command to get the channel
+    command: oc get packagemanifest elasticsearch-operator -n openshift-marketplace -o jsonpath='{.status.channels[].name}'
+    register: r_channel
+
+  - name: Set the channel variable
+    set_fact:
+      channel: "{{ r_channel.stdout }}"
+
+  - name: Change the Subscription YAML file for Elasticsearch operator
+    lineinfile:
+      path: files/eo-sub.yaml
+      regexp: '^  channel:'
+      line: '  channel: "{{ channel }}"'
+
+# Apparently Ansible k8s doesn't support generateName so we have to use command here
+# https://github.com/openshift/openshift-restclient-python/issues/279
+  - name: Create a Subscription object for Elasticsearch operator
+    command: oc create -f files/eo-sub.yaml
+
+  - name: Create an RBAC object
+    k8s:
+      state: present
+      src: files/eo-rbac.yaml
+
+  - name: Create a CatalogSourceConfig object for ClusterLogging operator
+    k8s:
+      state: present
+      src: files/clo-csc.yaml
+
+  - name: Create a Subscription object for ClusterLogging operator
+    k8s:
+      state: present
+      src: files/clo-sub.yaml
+
+  - name: Create a ClusterLogging instance
+    k8s:
+      state: present
+      src: files/clusterlogging-instance.yaml
+
