@@ -36,3 +36,12 @@
       state: present
       src: files/cluster-admin-rolebinding.yaml
 
+  - name: Login to the cluster with each user
+    command: oc login -u {{ item }} -p openshift4
+    loop:
+      - paul
+      - ringo
+      - george
+      - pete
+      - john
+

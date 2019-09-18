@@ -11,7 +11,7 @@
       state: present
       src: files/clo-namespace.yaml
 
-  - name: Create an Operator Group object
+  - name: Create an Operator Group object for Elasticsearch
     k8s:
       state: present
       src: files/eo-og.yaml
@@ -44,6 +44,9 @@
     k8s:
       state: present
       src: files/eo-rbac.yaml
+
+  - name: Create an Operator Group object for ClusterLogging
+    command: oc create -f files/clo-og.yaml
 
   - name: Create a CatalogSourceConfig object for ClusterLogging operator
     k8s:
