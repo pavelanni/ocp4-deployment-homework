@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Patch IngressController
+    command: oc patch --type merge ingresscontroller default -n openshift-ingress-operator -p '{"spec":{"nodePlacement":{"nodeSelector":{"matchLabels":{"node-role.kubernetes.io/infra":""}}}}}'
+
+  - name: Patch imageregistry Config
+    command: oc patch --type merge config cluster -n openshift-ingress -p '{"spec":{"nodeSelector":{"node-role.kubernetes.io/infra":""}}}'
+
+  - name: Change cluster monitoring ConfigMap
+    k8s:
+      src: files/cluster-monitoring-configmap.yaml
