@@ -2,34 +2,34 @@
     "apiVersion": "machine.openshift.io/v1beta1",
     "kind": "MachineSet",
     "metadata": {
-        "creationTimestamp": "2019-09-18T20:24:15Z",
+        "creationTimestamp": "2019-09-18T22:28:03Z",
         "generation": 1,
         "labels": {
-            "machine.openshift.io/cluster-api-cluster": "cluster-99b8-bcqj5"
+            "machine.openshift.io/cluster-api-cluster": "cluster-99b8-f99hb"
         },
-        "name": "cluster-99b8-bcqj5-infra-us-east-2b",
+        "name": "cluster-99b8-f99hb-infra-us-east-2b",
         "namespace": "openshift-machine-api",
-        "selfLink": "/apis/machine.openshift.io/v1beta1/namespaces/openshift-machine-api/machinesets/cluster-99b8-bcqj5-infra-us-east-2b",
-        "uid": "48972fd3-da52-11e9-b43a-0ab185ae1de4"
+        "selfLink": "/apis/machine.openshift.io/v1beta1/namespaces/openshift-machine-api/machinesets/cluster-99b8-f99hb-infra-us-east-2b",
+        "uid": "944d2e89-da63-11e9-a825-0a99776f31d0"
     },
     "spec": {
         "replicas": 1,
         "selector": {
             "matchLabels": {
-                "machine.openshift.io/cluster-api-cluster": "cluster-99b8-bcqj5",
+                "machine.openshift.io/cluster-api-cluster": "cluster-99b8-f99hb",
                 "machine.openshift.io/cluster-api-machine-role": "worker",
                 "machine.openshift.io/cluster-api-machine-type": "worker",
-                "machine.openshift.io/cluster-api-machineset": "cluster-99b8-bcqj5-worker-us-east-2b"
+                "machine.openshift.io/cluster-api-machineset": "cluster-99b8-f99hb-worker-us-east-2b"
             }
         },
         "template": {
             "metadata": {
                 "creationTimestamp": null,
                 "labels": {
-                    "machine.openshift.io/cluster-api-cluster": "cluster-99b8-bcqj5",
+                    "machine.openshift.io/cluster-api-cluster": "cluster-99b8-f99hb",
                     "machine.openshift.io/cluster-api-machine-role": "worker",
                     "machine.openshift.io/cluster-api-machine-type": "worker",
-                    "machine.openshift.io/cluster-api-machineset": "cluster-99b8-bcqj5-worker-us-east-2b"
+                    "machine.openshift.io/cluster-api-machineset": "cluster-99b8-f99hb-worker-us-east-2b"
                 }
             },
             "spec": {
@@ -60,7 +60,7 @@
                         },
                         "deviceIndex": 0,
                         "iamInstanceProfile": {
-                            "id": "cluster-99b8-bcqj5-worker-profile"
+                            "id": "cluster-99b8-f99hb-worker-profile"
                         },
                         "instanceType": "m5.xlarge",
                         "kind": "AWSMachineProviderConfig",
@@ -78,7 +78,7 @@
                                     {
                                         "name": "tag:Name",
                                         "values": [
-                                            "cluster-99b8-bcqj5-worker-sg"
+                                            "cluster-99b8-f99hb-worker-sg"
                                         ]
                                     }
                                 ]
@@ -89,14 +89,14 @@
                                 {
                                     "name": "tag:Name",
                                     "values": [
-                                        "cluster-99b8-bcqj5-private-us-east-2b"
+                                        "cluster-99b8-f99hb-private-us-east-2b"
                                     ]
                                 }
                             ]
                         },
                         "tags": [
                             {
-                                "name": "kubernetes.io/cluster/cluster-99b8-bcqj5",
+                                "name": "kubernetes.io/cluster/cluster-99b8-f99hb",
                                 "value": "owned"
                             }
                         ],
@@ -109,10 +109,8 @@
         }
     },
     "status": {
-        "availableReplicas": 1,
         "fullyLabeledReplicas": 1,
         "observedGeneration": 1,
-        "readyReplicas": 1,
         "replicas": 1
     }
 }

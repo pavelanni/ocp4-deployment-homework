@@ -8,4 +8,7 @@
         defaultRequest:
           cpu: "500m" 
           memory: "500Mi" 
+        default:
+          cpu: "1" 
+          memory: "1Gi" 
 

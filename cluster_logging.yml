@@ -58,6 +58,10 @@
       state: present
       src: files/clo-sub.yaml
 
+  - name: Pause for 1 minute
+    pause:
+      minutes: 1
+
   - name: Create a ClusterLogging instance
     k8s:
       state: present
